@@ -6,11 +6,12 @@ import { AuthProvider } from '../context/AuthContext';
 import { Alert } from 'react-native';
 import { account, databases } from '../appwrite/appwrite';
 
-jest.mock('@env', () => ({
+
+jest.mock('../jest-mock.js', () => ({
     APPWRITE_ENDPOINT: 'https://test.io',
     APPWRITE_PROJECT: 'test',
     APPWRITE_DATABASE: 'test-db'
-}));
+}), { virtual: true });
 
 jest.mock('../appwrite/appwrite', () => ({
     account: {
@@ -20,7 +21,6 @@ jest.mock('../appwrite/appwrite', () => ({
     databases: {
         listDocuments: jest.fn(),
     },
-
     client: {},
     DATABASE_ID: 'db',
     PROPERTY_COLLECTION_ID: 'col',
@@ -50,9 +50,7 @@ describe('Integration Tests - Login Flow', () => {
 
     it('Should show alert if inputs are empty on submit', () => {
         const { getByText } = render(<AuthProvider><Login /></AuthProvider>);
-
         fireEvent.press(getByText('Zaloguj się'));
-
         expect(Alert.alert).toHaveBeenCalledWith("Błąd", "Wprowadź email i hasło");
     });
 
@@ -86,12 +84,12 @@ describe('Integration Tests - Login Flow', () => {
 
         expect(Alert.alert).toHaveBeenCalledWith("Błąd", "Invalid credentials");
     });
+
     it('Should have correct content type on password input', () => {
         const { getByPlaceholderText } = render(<AuthProvider><Login /></AuthProvider>);
         const passwordInput = getByPlaceholderText('Hasło');
         expect(passwordInput.props.secureTextEntry).toBe(true);
     });
-
 });
 
 describe('Integration Tests - HomeScreen Data Flow', () => {
@@ -108,30 +106,28 @@ describe('Integration Tests - HomeScreen Data Flow', () => {
     });
 
     it('Should fetch and display properties from database', async () => {
-        const { getByText } = render(<HomeScreen />);
-
+        const { getAllByText } = render(<HomeScreen />);
         await waitFor(() => {
             expect(databases.listDocuments).toHaveBeenCalled();
-            expect(getByText('House 1')).toBeTruthy();
+            expect(getAllByText('House 1')[0]).toBeTruthy();
         });
     });
 
     it('Should filter properties when category is selected', async () => {
-        const { getByText } = render(<HomeScreen />);
-
-        await waitFor(() => expect(getByText('House 1')).toBeTruthy());
+        const { getByText, getAllByText } = render(<HomeScreen />);
+        await waitFor(() => expect(getAllByText('House 1')[0]).toBeTruthy());
 
         fireEvent.press(getByText('Apartamenty'));
 
         await waitFor(() => {
-            expect(getByText('Apartment 1')).toBeTruthy();
+            expect(getAllByText('Apartment 1')[0]).toBeTruthy();
         });
     });
 
     it('Should render Featured section title', async () => {
-        const { getByText } = render(<HomeScreen />);
+        const { getAllByText } = render(<HomeScreen />);
         await waitFor(() => {
-            expect(getByText('Wyróżnione')).toBeTruthy();
+            expect(getAllByText('Wyróżnione')[0]).toBeTruthy();
         });
     });
 
@@ -140,5 +136,15 @@ describe('Integration Tests - HomeScreen Data Flow', () => {
         await waitFor(() => {
             expect(databases.listDocuments).toHaveBeenCalled();
         });
+    });
+
+    it('Should navigate to Details when card is pressed', async () => {
+        const { getAllByText } = render(<HomeScreen />);
+
+        await waitFor(() => expect(getAllByText('House 1')[0]).toBeTruthy());
+
+        fireEvent.press(getAllByText('House 1')[0]);
+
+        expect(mockNavigate).toHaveBeenCalled();
     });
 });
