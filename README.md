@@ -34,7 +34,7 @@ Aby uruchomić projekt na lokalnym środowisku, należy wykonać poniższe komen
 ## Testy
 W projekcie zaimplementowano testy automatyczne z wykorzystaniem frameworka **Jest** oraz **React Native Testing Library**.
 
-### 1. Testy Jednostkowe (Unit Tests)
+### 1. Testy Jednostkowe (Unit Tests) [__tests__/UnitTests.test.tsx]
 Lokalizacja: `__tests__/UnitTests.test.tsx`
 Testy te weryfikują działanie pojedynczych komponentów w izolacji:
 * **AuthContext:** Sprawdza logikę zarządzania stanem sesji (domyślny stan wylogowania, zmiana na zalogowany).
