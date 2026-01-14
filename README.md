@@ -42,7 +42,7 @@ Testy te weryfikują działanie pojedynczych komponentów w izolacji:
 * **Filters:** Testuje renderowanie kategorii filtrów i reakcję na kliknięcie.
 
 ### 2. Testy Integracyjne (Integration Tests)
-Lokalizacja:[__tests__/IntegrationTests.test.tsx](./__tests__/IntegrationTests.test.tsx)
+Lokalizacja: [__tests__/IntegrationTests.test.tsx](./__tests__/IntegrationTests.test.tsx)
 Testy te sprawdzają współpracę między modułami oraz przepływ danych (Data Flow):
 * **Logowanie:** Symulacja procesu logowania (Formularz -> Mock API -> Alert sukcesu/błędu).
 * **Ekran Główny:** Weryfikacja pobierania danych z mockowanej bazy Appwrite i wyświetlania ich na liście.
